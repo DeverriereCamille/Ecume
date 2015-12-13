@@ -6,7 +6,6 @@ gem 'rails', '4.2.5'
 #Pour les user
 gem 'devise', '~> 3.5', '>= 3.5.2'
 # database
-gem 'sqlite3'
 gem 'pg', '~> 0.18.4'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
