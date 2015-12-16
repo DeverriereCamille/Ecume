@@ -30,3 +30,4 @@ Please feel free to use a different markup language if you do not plan to run
 
 rails generate migration add_linked_conversation_id_to_marks linked_conversation_id:int
 rails generate migration add_read_to_messages read:boolean
+rails generate migration add_unlocking_key_to_conversations unlocking_key:string

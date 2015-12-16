@@ -42,7 +42,9 @@ class MessagesController < ApplicationController
     else # If conversation_id isn't known, we have to create the converation
   
       # Create and record this new conversation
-      @current_conversation = Conversation.new({transmitter_id: current_user.id})
+      # Generate a random string
+      @unlocking_key = (0...50).map { ('a'..'z').to_a[rand(26)] }.join
+      @current_conversation = Conversation.new({transmitter_id: current_user.id, unlocking_key: @unlocking_key.to_s})
       @current_conversation.save
       @current_conversation_id = @current_conversation.id
       
@@ -64,6 +66,9 @@ class MessagesController < ApplicationController
   def show
     # Collect the id in get for display messages
   	@message= Message.find(params[:id])
+
+    
+
     # Find the conversation to display, based on the collected message
     @conversation = Conversation.find(@message.conversation_id)
 
@@ -103,6 +108,14 @@ class MessagesController < ApplicationController
 
 
       else #If there is no recepteur (let's be the recepteur)
+        #Have a check on the "unlocking_key" value, cause there is onlu one way to arrive here
+
+        # - - - - - - - - - - - - - -  - <
+        if params[:unlocking_key] != @conversation.unlocking_key
+          flash[:notice] = "Bien essayé mais nan, c'est les messages qui viennent à nous, pas nous qui vennont aux messages"
+          redirect_to root_path
+        end
+
         # If it's an answer, lets record you as the recepteur
         #the folowing if is useless normally but it's to be sure
         if Conversation.find(@message.conversation_id).transmitter_id != current_user.id
@@ -128,11 +141,15 @@ class MessagesController < ApplicationController
   # Mes conversations
   def index
     # Réunir les conversation ou 
-    # =>  le user_curent est l'émetteur et ou il y a un recepteur
+    # =>  le user_curent est l'émetteur et ou il y a un recepteur et ou il y a plus d'un message
     # +  le user_curent est le récepteur
-    @questions = Conversation.where({transmitter_id: current_user.id}).where.not(recepteur_id: nil)
-    @answers = Conversation.where({recepteur_id: current_user.id})
+
+    @questions = Conversation.where(transmitter_id: current_user.id).where.not(recepteur_id: nil)
+    @answers = Conversation.where(recepteur_id: current_user.id)
     @conversation_full = @questions + @answers
+
+    # bug noticed : A user could become Recepter when he clic on the "repondre" link, then the transmitter is able to see the conversation even if the recepter didn"t replied..
+    # -> But anyway, if a user see a conversation, he could only respond to this one, then we can consider he will do if faster
 
     if params[:q].present?
       @query = Message.ransack(params[:q])
@@ -141,7 +158,7 @@ class MessagesController < ApplicationController
       if @query.content_cont.size <= 2
         flash[:alert] = "Faîtes une recherche de plus de 2 caractères pour un minimum de pertinence"
         #Fix some variable to nil or empty stuff for nothing to appear
-
+        @query = nil
         @conversation_full = Array.new
         @message_result_query = Array.new
       else
@@ -150,11 +167,11 @@ class MessagesController < ApplicationController
         @message_result_query = @query.result()
 
         #Array of Message contains :q inside
-        @what_is_that = Array.try_convert(@message_result_query)
+        @array_message_result = Array.try_convert(@message_result_query)
 
 
         @conversation_full = Array.new
-        @what_is_that.each do |i|
+        @array_message_result.each do |i|
           if Conversation.find(i.conversation_id).published?
             @conversation_full.push(Conversation.find(i.conversation_id))
           end

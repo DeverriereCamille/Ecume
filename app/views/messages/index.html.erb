@@ -5,10 +5,12 @@
 	<span style="color:purple">
 	<% if @query.content_cont.size > 2 %>	
 		
-		<% if @message_result_query.count <= 0 %>
+		<% if @conversation_full.count < 1 %>
 			Aucune conversation publique de contient <strong>"<%= @query.content_cont %>" </strong>
 		<% else %>
-			Liste des conversation publique contenant <strong>" <%= @query.content_cont %> " (taille :<%= @query.content_cont.size %>) </strong><br><br>
+			Liste des conversation publique contenant <strong>" <%= @query.content_cont %> "</strong>
+			<%= @conversation_full.count %>
+			<br><br>
 		<% end %>
 
 	<% else %>

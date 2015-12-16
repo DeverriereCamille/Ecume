@@ -3,15 +3,15 @@
 
 Liste des user :<br>
 <% @users.each do |user| %>
-	<li><%= user.email %>, <%= user.id %>, <%= user.encrypted_password %> </li>
+	<li><%= user.email %>, <%= user.id %>, <% user.encrypted_password %> Note : <strong><%= user.averageMark %></strong> </li>
 <% end %>
 
 
-<p>
-<strong>Afficher tous les messages dans les conversations</strong><br></p>
+<hr>
+<strong>Afficher tous les messages dans les conversations</strong><br>
 
 <% @messages.each do |message| %>
-	<li><%= message.content %> // author_id : <%= message.author_id %> //conversation_id : <%= message.conversation_id %>
+	<li><%= message.content %> // author_id : <%= message.author_id %>// id : <%= message.id %> //conversation_id : <%= message.conversation_id %>
 	<% if message.read %>
 		 <strong style="color:green">
 		 	READ
@@ -24,8 +24,8 @@ Liste des user :<br>
 </li>
 <% end %>
 
-<p>
-<strong>Afficher toutes les conversations</strong><br></p>
+<hr>
+<strong>Afficher toutes les conversations</strong><br>
 
 <% @conversations.each do |conversation| %>
 
@@ -40,6 +40,7 @@ Liste des user :<br>
 		<% end %>
 	<% end %>
  >
+ <!--unlocking_key : <%= conversation.unlocking_key %> //-->
  transmitter_id : <%= conversation.transmitter_id %> //
  recepteur_id : <%= conversation.recepteur_id %> //
  conversation_id : <%= conversation.id %> //
@@ -49,7 +50,7 @@ Liste des user :<br>
 </span></li>
 <% end %>
 
-<br>
+<hr>
 <strong>Conversation sans interlocuteurs : <br></strong>
 
  conversation_with_no_recepter : 
@@ -58,3 +59,12 @@ Liste des user :<br>
  <li><%= this_conversation.id %></li>
 <% end %>
 
+<hr>
+<strong>Notes : <br></strong>
+<br>
+<% @marks.each do |mark| %>
+	L'utilisateur n°<%= mark.user_liking_id %> 
+	à noté l'utilisateur <%= mark.user_liked_id %>
+	à la hauteur de <%= mark.mark %>/5 
+	par rapport à la conversation <%= mark.linked_conversation_id %>
+<% end %>

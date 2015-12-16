@@ -16,7 +16,8 @@ class IndexController < ApplicationController
 
   		if number_of_message == 1
   			# looking for the content of a conversation with only the question
-  			@message_to_answer = @unreplied_conversation.lastMessage
+  			@conversation_to_answer = @unreplied_conversation 
+        @message_to_answer = @unreplied_conversation.lastMessage
   			@message_to_answer_content = @message_to_answer.content
   			@message_to_answer_id = @message_to_answer.id
 
@@ -27,6 +28,7 @@ class IndexController < ApplicationController
   				@message_to_answer = @found_messages
   				@message_to_answer_content = @found_messages.content
   				@message_to_answer_id = @found_messages.id
+          @conversation_to_answer = Conversation.find(@found_messages.conversation_id)
   			end
   		end
   end
@@ -35,7 +37,8 @@ class IndexController < ApplicationController
   	@users = User.all
   	@messages = Message.all
   	@conversations = Conversation.all
-  	@conversations_with_no_recepter = Conversation.where(recepteur_id: nil)
+    @conversations_with_no_recepter = Conversation.where(recepteur_id: nil)
+  	@marks = Mark.all
   end
 
 end

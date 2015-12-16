@@ -52,5 +52,16 @@ class User < ActiveRecord::Base
     Message.where(conversation_id: conversation_id).where(read: false).where.not(author_id: id)
   end
 
+  def averageMark
+    #fait la moyenne de toutes les notes qu'a eu un user
+    @average = Mark.where(user_liked_id: id).average(:mark)
+    if @average.nil?
+      return 2.5
+    else
+      return @average
+    end
+  end
+
+
 
 end

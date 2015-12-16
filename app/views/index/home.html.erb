@@ -5,7 +5,7 @@
 		Message :<br>
 		<%= @message_to_answer.content %>  //  
 		<%= @message_to_answer.author_id %><br>
-		<%= link_to 'répondre', message_path(id: @message_to_answer.id) %>
+		<%= link_to 'Répondre', message_path(id: @message_to_answer.id,unlocking_key: @conversation_to_answer.unlocking_key) %>
 	<% end %>
 </div>
 

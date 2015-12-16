@@ -46,39 +46,55 @@
 				<%= link_to "Rendre publique", edit_message_path(conversation_to_publish_id: @conversation.id)%>
 			<% end %>
 		<% end %>
-		<br><br>	
-		Noter la pertinence des réponses apportés :<br>
 
-			
-		<%= form_for(@new_mark) do |f| %>
-			<% (0..5).each do |i| %>
-				<%= radio_button_tag(:mark, i) %>
-				<%= label_tag(:mark_label, i) %><br>
-			<% end %>
+
+		<% if @conversation.alreadyNotedBy(current_user.id).present? %>
+
+			<br><br>Vous avez attribué 
+			<%= @conversation.alreadyNotedBy(current_user.id).last.mark %> 
+			à la pertinence de ces réponses
+
+		<% else %>
+
+			<br><br>	
+			Noter la pertinence des réponses apportés :<br>
+				
+			<%= form_for(@new_mark) do |f| %>
+				<% (0..5).each do |i| %>
+					<%= f.radio_button(:mark, i) %>
+					<%= label_tag(:mark_label, i) %><br>
+				<% end %>
 				<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
-				<%= f.hidden_field :conversation_id, :value => @conversation.id %>
+				<%= f.hidden_field :linked_conversation_id, :value => @conversation.id %>
 				<%= f.hidden_field :user_liking_id, :value => current_user.id %>
 				<%= f.submit "Noter" %>
 
-		<% end %>
+			<% end %>
 
-		<% # user_liked_id: @interlocutor.id, mark: i, linked_conversation_id: @conversation.id, user_liking_id: current_user.id %>
+		<% end %>
 
 
 	<% else %>
 
-		<%= form_for(@answer) do |f| %>
-		  <div class="field">
-		    <%= f.text_field :content %>
-		  </div>	
 
-			<%= f.hidden_field :conversation_id, :value => @message.conversation_id %>
+		<% if @all_messages.count <= 1 && current_user.id == @conversation.transmitter_id %>
 
-		  
-		  <div class="actions">
-		    <%= f.submit %>
-		  </div>
-	<% end %>
+		<%else%>
+
+			<%= form_for(@answer) do |f| %>
+			  <div class="field">
+			    <%= f.text_field :content %>
+			  </div>	
+
+				<%= f.hidden_field :conversation_id, :value => @message.conversation_id %>
+
+			  
+			  <div class="actions">
+			    <%= f.submit %>
+			  </div>
+			<% end %>
+		<% end %>
+
 
 	<br><br>
 	<% if @all_messages.count > 1 %>

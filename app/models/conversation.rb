@@ -38,6 +38,11 @@ class Conversation < ActiveRecord::Base
 	def unreadMessageby(user_id)
 		# Conversation.where("transmitter_id = user_id OR recepteur_id = user_id")
 		Message.where(conversation_id: id).where(read: false).where.not(author_id: user_id)
-		
 	end
+
+	# Fonction that return the Mark object of the mark that user_id given to his interlocutor during this conversation
+	def alreadyNotedBy(user_id)
+		Mark.where(linked_conversation_id: id, user_liking_id: user_id)
+	end
+
 end
