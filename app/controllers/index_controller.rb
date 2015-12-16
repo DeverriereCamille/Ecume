@@ -38,12 +38,4 @@ class IndexController < ApplicationController
   	@conversations_with_no_recepter = Conversation.where(recepteur_id: nil)
   end
 
-  def research
-  	@q = Message.ransack()
-    @message_reasult = @q.result()
-  	# @messages = @q.result(distinct: true)
-  end
-
-
-
 end

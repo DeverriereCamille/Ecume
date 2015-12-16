@@ -11,7 +11,17 @@ Liste des user :<br>
 <strong>Afficher tous les messages dans les conversations</strong><br></p>
 
 <% @messages.each do |message| %>
-	<li><td><%= message.content %> // author_id : <%= message.author_id %> //conversation_id : <%= message.conversation_id %></td></li>
+	<li><%= message.content %> // author_id : <%= message.author_id %> //conversation_id : <%= message.conversation_id %>
+	<% if message.read %>
+		 <strong style="color:green">
+		 	READ
+		 </strong>
+	<%else%>
+	<strong style="color:red">UNREAD
+</strong>
+			
+	<%end%>
+</li>
 <% end %>
 
 <p>

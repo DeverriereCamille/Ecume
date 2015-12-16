@@ -95,6 +95,13 @@ class MessagesController < ApplicationController
         else
           @interlocutor = User.find(@conversation.transmitter_id)
         end
+
+        if @conversation.finished
+          # Variable nécessaire à la création d'un formulaire de notation
+          @new_mark = Mark.new
+        end
+
+
       else #If there is no recepteur (let's be the recepteur)
         # If it's an answer, lets record you as the recepteur
         #the folowing if is useless normally but it's to be sure
@@ -125,16 +132,42 @@ class MessagesController < ApplicationController
     # +  le user_curent est le récepteur
     @questions = Conversation.where({transmitter_id: current_user.id}).where.not(recepteur_id: nil)
     @answers = Conversation.where({recepteur_id: current_user.id})
-    
-    if params[:q].present?
-      @q = Message.ransack(params[:q])
-      @message_reasult = @q.result()
-    else
-      flash[:notice] = "Pas de recherche demandée"
+    @conversation_full = @questions + @answers
 
-    end
-     
-  end
+    if params[:q].present?
+      @query = Message.ransack(params[:q])
+
+      #check if the size of the query is enough long :
+      if @query.content_cont.size <= 2
+        flash[:alert] = "Faîtes une recherche de plus de 2 caractères pour un minimum de pertinence"
+        #Fix some variable to nil or empty stuff for nothing to appear
+
+        @conversation_full = Array.new
+        @message_result_query = Array.new
+      else
+
+        #list of Mesages contains :q inside
+        @message_result_query = @query.result()
+
+        #Array of Message contains :q inside
+        @what_is_that = Array.try_convert(@message_result_query)
+
+
+        @conversation_full = Array.new
+        @what_is_that.each do |i|
+          if Conversation.find(i.conversation_id).published?
+            @conversation_full.push(Conversation.find(i.conversation_id))
+          end
+
+        end
+
+      end  #end if minimum query size
+
+
+    end #end of if presence params :q
+
+
+  end # end of index method
 
   # def answering(conversation_id)
   #   @message = Message.new(message_params.merge(author_id: current_user.id, conversation_id: conversation_id))

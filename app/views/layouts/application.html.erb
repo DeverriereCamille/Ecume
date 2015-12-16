@@ -5,7 +5,7 @@
 
   <%= csrf_meta_tags %>
 </head>
-<header style="background-color:#dddddd;padding:20px;margin:none;">
+<header style="background-color:rgba(56, 202, 62, 0.51);padding:20px;margin:none;">
 	<% if notice %>
 	  <p class="alert alert-success" style="color:green"><%= notice %></p>
 	<% end %>
@@ -16,10 +16,7 @@
 	<% if user_signed_in? %>
 	  Logged in as <strong><%= current_user.email %> ( id: <%= current_user.id %> </strong>.
 	  <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
-	  <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %><br>
-	  
-	  
-
+	  <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
 	<% else %>
 	  <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
 	  <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
@@ -28,14 +25,19 @@
 	  <li><a href="/">Accueil</a></li>
 	  <li><a href="/messages">Mes Conversation</a>
 	  <% if user_signed_in?
-	  	if current_user.unreadMessage? %>
-	  		<- Unread Messages
+	  	if current_user.unreadMessage?.present? %>
+	  		<- <%= current_user.unreadMessage?.count %> Unread Messages
 	  	<%end%>
 	  <%end%>
 	  </li>
 	  <li><a href="/general">Résumé général (pour dev)</a></li>
-	  <li><a href="/research">Moteur de Recherche</a></li>
-	  
+
+	  <% @message_reasult = Message.ransack().result() %>
+
+	  <%= search_form_for Message.ransack() do |f| %>
+		  <%= f.text_field :content_cont %>
+		  <%= f.submit "Rechercher" %>
+		<% end %>
 
 	</ul>
 </header>

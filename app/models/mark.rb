@@ -1,6 +1,6 @@
 class Mark < ActiveRecord::Base
 	has_many :users
-	belongs :users
+	has_many :conversations
 
 	def average
 		#fait la moyenne de toutes les notes qu'a eu un user

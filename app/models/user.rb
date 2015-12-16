@@ -40,9 +40,17 @@ class User < ActiveRecord::Base
 
   end
 
+  #return the list of all unread message
   def unreadMessage?
-    return false
+    personalConversation = Conversation.where(transmitter_id: id) + Conversation.where(recepteur_id: id)
+
+    Message.where(conversation_id: personalConversation.to_a).where(read: false).where.not(author_id: id)
   end 
+
+  #return a list of unread message for a particular conversation
+  def unreadMessageFrom(conversation_id)
+    Message.where(conversation_id: conversation_id).where(read: false).where.not(author_id: id)
+  end
 
 
 end

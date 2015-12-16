@@ -1,18 +1,31 @@
-Toutes les conversations du user <strong><%= current_user.email %></strong> à l'id <strong><%= current_user.id%></strong><br>
 
-<% if @q.present? %>
-<hr>
+<% # if there is a query, then the page present results %>
+<% if @query.present? %>
+
 	<span style="color:purple">
-		Résultats de la recherche pour <strong>" <%= @q.content_cont %> " </strong><br>
-		<% @message_reasult.each do |stuff| %>
-			<%= stuff.content %> // <%= stuff.conversation_id %><br>
-		<%end%>
+	<% if @query.content_cont.size > 2 %>	
+		
+		<% if @message_result_query.count <= 0 %>
+			Aucune conversation publique de contient <strong>"<%= @query.content_cont %>" </strong>
+		<% else %>
+			Liste des conversation publique contenant <strong>" <%= @query.content_cont %> " (taille :<%= @query.content_cont.size %>) </strong><br><br>
+		<% end %>
+
+	<% else %>
+		La requette demandée un un peu courte :/
+	<% end %>
 	</span>
-	<hr>
-<%end%>
 
 
-<% @questions.each do |conversation| %>
+
+<% else %>
+	
+	Toutes les conversations du user <strong><%= current_user.email %></strong> à l'id 
+	<strong><%= current_user.id%></strong><br>
+
+<% end %>
+
+<% @conversation_full.each do |conversation| %>
 
 	<span 
 
@@ -25,15 +38,23 @@ Toutes les conversations du user <strong><%= current_user.email %></strong> à l
 		<% end %>
 		>
 		<%= link_to 'Conversation '+conversation.id.to_s, message_path(id: conversation.lastMessage.id) %>
-		<strong> -> Question :</strong> <%= conversation.firstMessage.content%><strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%>
 
-		<% if conversation.unreadMessageby(current_user.id) %>
-			<span style="color:red"><- Unread Message here</span>
+		<% if current_user.unreadMessageFrom(conversation.id).present? %>
+
+			<!-- Message.where(conversation_id: conversation.id).where(read: false).where.not(author_id: current_user.id).present? %> -->
+			<span style="color:red">
+				<--<%= current_user.unreadMessageFrom(conversation.id).count %> Unread Message here
+			</span>
+
 		<% end %>
 
-		<% Message.where(conversation_id: conversation.id).where(read: false).where.not(author_id: current_user.id).each do |fuck| %>
-			Content : <%= fuck.content %>
-		<%end%>
+		<li><strong> -> Question :</strong> <%= conversation.firstMessage.content%></li>
+		<li><strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%></li>
+
+		
+
+		
+		
 
 		<br>
 	</span>
@@ -41,17 +62,4 @@ Toutes les conversations du user <strong><%= current_user.email %></strong> à l
 <% end %>
 
 
-<% @answers.each do |conversation| %>
-
-	<span 
-
-		<% if conversation.finished %>
-			style="color:red;"
-		<% end %>
-	 	>
-		<%= link_to 'Conversation n°'+conversation.id.to_s, message_path(id: conversation.lastMessage.id) %>
-		<strong> -> Question :</strong> <%= conversation.firstMessage.content%> <strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%><br>
-	</span>
-
-<% end %>
 

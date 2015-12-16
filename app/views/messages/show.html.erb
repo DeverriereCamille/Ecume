@@ -49,10 +49,20 @@
 		<br><br>	
 		Noter la pertinence des réponses apportés :<br>
 
-		<% (0..5).each do |i| %>
-			<%= link_to i.to_s, edit_message_path(user_liked_id: @interlocutor.id, mark: i, linked_conversation_id: @conversation.id, user_liking_id: current_user.id ) %>
+			
+		<%= form_for(@new_mark) do |f| %>
+			<% (0..5).each do |i| %>
+				<%= radio_button_tag(:mark, i) %>
+				<%= label_tag(:mark_label, i) %><br>
+			<% end %>
+				<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
+				<%= f.hidden_field :conversation_id, :value => @conversation.id %>
+				<%= f.hidden_field :user_liking_id, :value => current_user.id %>
+				<%= f.submit "Noter" %>
+
 		<% end %>
 
+		<% # user_liked_id: @interlocutor.id, mark: i, linked_conversation_id: @conversation.id, user_liking_id: current_user.id %>
 
 
 	<% else %>
@@ -71,8 +81,10 @@
 	<% end %>
 
 	<br><br>
-	<% if current_user.id == @conversation.transmitter_id || current_user.id == @conversation.recepteur_id %>
-		<%= link_to "Clore l'échange", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
+	<% if @all_messages.count > 1 %>
+		<% if current_user.id == @conversation.transmitter_id || current_user.id == @conversation.recepteur_id %>
+			<%= link_to "Clore l'échange", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
+		<% end %>
 	<% end %>
 <% end %>	
 
