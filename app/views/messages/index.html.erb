@@ -1,0 +1,57 @@
+Toutes les conversations du user <strong><%= current_user.email %></strong> à l'id <strong><%= current_user.id%></strong><br>
+
+<% if @q.present? %>
+<hr>
+	<span style="color:purple">
+		Résultats de la recherche pour <strong>" <%= @q.content_cont %> " </strong><br>
+		<% @message_reasult.each do |stuff| %>
+			<%= stuff.content %> // <%= stuff.conversation_id %><br>
+		<%end%>
+	</span>
+	<hr>
+<%end%>
+
+
+<% @questions.each do |conversation| %>
+
+	<span 
+
+		<% if conversation.published? %>
+			style="color:green;"
+		<% else %>
+			<% if conversation.finished %>
+				style="color:red;"
+			<% end %>
+		<% end %>
+		>
+		<%= link_to 'Conversation '+conversation.id.to_s, message_path(id: conversation.lastMessage.id) %>
+		<strong> -> Question :</strong> <%= conversation.firstMessage.content%><strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%>
+
+		<% if conversation.unreadMessageby(current_user.id) %>
+			<span style="color:red"><- Unread Message here</span>
+		<% end %>
+
+		<% Message.where(conversation_id: conversation.id).where(read: false).where.not(author_id: current_user.id).each do |fuck| %>
+			Content : <%= fuck.content %>
+		<%end%>
+
+		<br>
+	</span>
+
+<% end %>
+
+
+<% @answers.each do |conversation| %>
+
+	<span 
+
+		<% if conversation.finished %>
+			style="color:red;"
+		<% end %>
+	 	>
+		<%= link_to 'Conversation n°'+conversation.id.to_s, message_path(id: conversation.lastMessage.id) %>
+		<strong> -> Question :</strong> <%= conversation.firstMessage.content%> <strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%><br>
+	</span>
+
+<% end %>
+

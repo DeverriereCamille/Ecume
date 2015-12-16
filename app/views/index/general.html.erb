@@ -1,0 +1,50 @@
+<strong>Afficher les différentes addresses mails des profils créés</strong><br></p>
+
+
+Liste des user :<br>
+<% @users.each do |user| %>
+	<li><%= user.email %>, <%= user.id %>, <%= user.encrypted_password %> </li>
+<% end %>
+
+
+<p>
+<strong>Afficher tous les messages dans les conversations</strong><br></p>
+
+<% @messages.each do |message| %>
+	<li><td><%= message.content %> // author_id : <%= message.author_id %> //conversation_id : <%= message.conversation_id %></td></li>
+<% end %>
+
+<p>
+<strong>Afficher toutes les conversations</strong><br></p>
+
+<% @conversations.each do |conversation| %>
+
+	<li><span 
+
+	<% if conversation.finished %>
+	
+		<% if conversation.published? %>
+			style="color:green;"
+		<% else %>
+			style="color:red;"
+		<% end %>
+	<% end %>
+ >
+ transmitter_id : <%= conversation.transmitter_id %> //
+ recepteur_id : <%= conversation.recepteur_id %> //
+ conversation_id : <%= conversation.id %> //
+ conversation_published_by_transmitter : <%= conversation.published_by_transmitter %> //
+ conversation_published_by_recepteur : <%= conversation.published_by_recepteur %> //
+
+</span></li>
+<% end %>
+
+<br>
+<strong>Conversation sans interlocuteurs : <br></strong>
+
+ conversation_with_no_recepter : 
+
+<% @conversations_with_no_recepter.each do |this_conversation| %>
+ <li><%= this_conversation.id %></li>
+<% end %>
+

@@ -1,10 +1,24 @@
-<div class="center jumbotron">
-  <h1>Welcome to the Ruby Project</h1>
+<div style="background-color: greenyellow; text-align:center; padding:10px">
+	<% if @message_to_answer.blank? %>
+		Pas de message
+	<% else %>
+		Message :<br>
+		<%= @message_to_answer.content %>  //  
+		<%= @message_to_answer.author_id %><br>
+		<%= link_to 'répondre', message_path(id: @message_to_answer.id) %>
+	<% end %>
+</div>
 
-  <h2>
-    This is the home page for the Ruby Project.
-  </h2>
-
-  <%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %>
+<div style="background-color: red;  text-align:center; padding:10px">
+  
+  <%= form_for(@message) do |f| %>
+	  <div class="field">
+	    Posez votre question !<br>
+	    <%= f.text_field :content %>
+	  </div>
+	  <div class="actions">
+	    <%= f.submit %>
+	  </div>
+	<% end %>
 
 </div>

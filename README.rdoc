@@ -26,3 +26,7 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+
+rails generate migration add_linked_conversation_id_to_marks linked_conversation_id:int
+rails generate migration add_read_to_messages read:boolean
