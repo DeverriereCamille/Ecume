@@ -16,6 +16,9 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'theruby racer', platforms: :ruby
 
+# gem 'jquery-rails', '~> 4.0', '>= 4.0.5'
+
+
 # Gem for research engin
 gem 'ransack', '~> 1.7'
 

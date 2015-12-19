@@ -6,8 +6,6 @@ class User < ActiveRecord::Base
 
 
   def find_message
-    # Dans une version plus avancée, il faudra prendre en compte la note de chaque utilisateur
-    # Afin d'attribuer plus de message aux mieux notés
 
     # Lister toutes les conversations sans recepteur_id où transmitter_id est different du current_user_id 
     @conversation_with_no_recepter = Conversation.where("recepteur_id" => nil).where.not(transmitter_id: id).sample
@@ -15,7 +13,31 @@ class User < ActiveRecord::Base
     # In the case there is no question without answer
     if @conversation_with_no_recepter
 
+      #Initialisation of pourcentage of finding a message
       @pourcetage_chance_of_finding_a_message = 100
+
+
+
+      # The goal is now to give more chance to find a message for those who have a good average
+     
+      # COMMENT THIS PART FOR HAVING 100% TO FIND A MESSAGE - - - - - - - - - - - - - - 
+
+      #we have averageMark between 0 & 5
+      @averageMark = averageMark
+
+      @averageMark *= 10 #now between 0 & 50
+
+      @averageMark += 10 #now between 10 & 60
+
+      #If you have 5/5 of average you have 60% to find a message = 2/3
+      #If you have 2.5/5 of average, you have 35% to find a message = 1/3
+      #If you have 0/5 of average, you have 10% to find a message = 1/10
+
+      #Of course 60% it's a lot, even 35% is still a lot, but it's for the beta version !
+
+      @pourcetage_chance_of_finding_a_message = @averageMark
+
+      # END COMMENT THIS PART FOR HAVING 100% TO FIND A MESSAGE - - - - - - - - - - - - - - 
 
       if rand(100) < @pourcetage_chance_of_finding_a_message
       	@message_to_answer = Message.where(conversation_id: @conversation_with_no_recepter.id).first

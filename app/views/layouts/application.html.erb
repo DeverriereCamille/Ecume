@@ -4,44 +4,89 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 
   <%= csrf_meta_tags %>
+
+		<script type="text/javascript" src="http://thibaultpetit.fr/ressources/jquery-1.3.min.js"></script>
+		<script type="text/javascript" src="http://thibaultpetit.fr/ressources/jquery.easing.1.3.min.js"></script>
+
 </head>
-<header style="background-color:rgba(56, 202, 62, 0.51);padding:20px;margin:none;">
-	<% if notice %>
-	  <p class="alert alert-success" style="color:green"><%= notice %></p>
-	<% end %>
-	<% if alert %>
-	  <p class="alert alert-danger"  style="color:red"><%= alert %></p>
-	<% end %>
-	<p class="navbar-text pull-right">
+
+<body onload="
+	setTimeout(function(){
+		$('.alert').animate({'bottom': '+=500px'},900, 'easeInOutExpo');
+		setTimeout(function(){
+			$('.alert').animate({'bottom': '-=500px'},900, 'easeInOutExpo');
+		},4000);
+	},300);">
+
+
+<% if notice %>
+  <div class="alert alert-success" style="color:green"><%= notice %></div>
+<% end %>
+
+<% if alert %>
+  <div class="alert alert-danger"  style="color:red"><%= alert %></div>
+<% end %>
+
+
+
+<!-- This part that is rotated to the left -->
+<header>
+
+  <% if user_signed_in? %>
+  <!-- I know indentation is bad here but there is a bug if it's done well :/ -->
+  	<a href="/messages">
+  	<% if current_user.unreadMessage?.present? %><%= image_tag("my_conversations_new.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><!-- <%= current_user.unreadMessage?.count %> Unread Messages--><%else%>
+			<%= image_tag("my_conversations.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><%end%></a>
+	<%end%>
+	
 	<% if user_signed_in? %>
-	  Logged in as <strong><%= current_user.email %> ( id: <%= current_user.id %> </strong>.
+	  <strong><%= current_user.email %></strong>
 	  <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
-	  <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+
+
+	<%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
 	<% else %>
+
 	  <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
 	  <%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
-	<% end %>)
-	<ul class="nav">
-	  <li><a href="/">Accueil</a></li>
-	  <li><a href="/messages">Mes Conversation</a>
-	  <% if user_signed_in?
-	  	if current_user.unreadMessage?.present? %>
-	  		<- <%= current_user.unreadMessage?.count %> Unread Messages
-	  	<%end%>
-	  <%end%>
-	  </li>
-	  <li><a href="/general">Résumé général (pour dev)</a></li>
+	<% end %>
+
+</header>
+<nav>
+
+	<p class="navbar-text pull-right">
+
+
+	  <a href="/">
+	  	<%= image_tag("logo.jpg", :alt => "Logo", :id => 'logo') %>
+	  </a>
+	  
+	  
+	  <!-- <a href="/general">Résumé général (pour dev)</a> -->
 
 	  <% @message_reasult = Message.ransack().result() %>
 
-	  <%= search_form_for Message.ransack() do |f| %>
-		  <%= f.text_field :content_cont %>
-		  <%= f.submit "Rechercher" %>
+	  <% search_form_for Message.ransack() do |f| %>
+		  <% f.text_field :content_cont %>
+		  <% f.submit "Rechercher" %>
 		<% end %>
 
-	</ul>
-</header>
+</nav>
 
-<%= yield %>
+	<%= yield %>
 
 <footer></footer>
+
+</body>
+
+
+
+
+
+<!-- Javascript -->
+<script type="text/javascript">
+	$("#close_pop_up").click(function(){ 
+		$("#pop_up").fadeOut(1000);//On fait apparaître le Book
+	});
+
+</script>

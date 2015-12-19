@@ -1,8 +1,13 @@
 class MessagesController < ApplicationController
+  include ActiveModel::Validations
+  validates :content, presence: true
+  validates :content, length: { minimum: 5 }
 
   def message_params
-    params.require(:message).permit(:content, :conversation_id)
+      params.require(:message).permit(:content, :conversation_id)
   end
+
+
 
   # def answer_params
   #   params.require(:answer).permit(:content, :conversation_id)
@@ -31,34 +36,40 @@ class MessagesController < ApplicationController
 
   def create
 
-    # Create a message
-
-    # If conversation_id is known, it's an answer
-    if message_params[:conversation_id].present?
-      @message = Message.new(message_params.merge(author_id: current_user.id, read: false))
-
-      flash[:notice] = "Votre réponse à bien été envoyée"
-    
-    else # If conversation_id isn't known, we have to create the converation
-  
-      # Create and record this new conversation
-      # Generate a random string
-      @unlocking_key = (0...50).map { ('a'..'z').to_a[rand(26)] }.join
-      @current_conversation = Conversation.new({transmitter_id: current_user.id, unlocking_key: @unlocking_key.to_s})
-      @current_conversation.save
-      @current_conversation_id = @current_conversation.id
-      
-      @message = Message.new(message_params.merge(author_id: current_user.id, read: false, conversation_id: @current_conversation_id))
-      flash[:notice] = "Message lancé... soyez patient, une réponse peut mettre du temps à revenir !"
-      
-    end
- 
-
-    if @message.save
+    if message_params[:content].length < 5
+      flash[:notice] = "Think about writing some stuff before sending !"      
       redirect_to root_path
     else
-      flash[:notice] = "Votre message n'a pas pu être envoyé pour une raison qui nous échappe.."
-      redirect_to root_path
+
+      # Create a message
+
+      # If conversation_id is known, it's an answer
+      if message_params[:conversation_id].present?
+        @message = Message.new(message_params.merge(author_id: current_user.id, read: false))
+
+        flash[:notice] = "Votre réponse à bien été envoyée"
+      
+      else # If conversation_id isn't known, we have to create the converation
+    
+        # Create and record this new conversation
+        # Generate a random string
+        @unlocking_key = (0...50).map { ('a'..'z').to_a[rand(26)] }.join
+        @current_conversation = Conversation.new({transmitter_id: current_user.id, unlocking_key: @unlocking_key.to_s})
+        @current_conversation.save
+        @current_conversation_id = @current_conversation.id
+        
+        @message = Message.new(message_params.merge(author_id: current_user.id, read: false, conversation_id: @current_conversation_id))
+        flash[:notice] = "Message lancé... soyez patient, une réponse peut mettre du temps à revenir !"
+        
+      end
+   
+
+      if @message.save
+        redirect_to root_path
+      else
+        flash[:notice] = "Votre message n'a pas pu être envoyé pour une raison qui nous échappe.."
+        redirect_to root_path
+      end
     end
   end
 

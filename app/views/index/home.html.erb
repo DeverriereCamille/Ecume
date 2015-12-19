@@ -1,24 +1,30 @@
-<div style="background-color: gold; text-align:center; padding:10px">
-	<% if @message_to_answer.blank? %>
-		Pas de message
-	<% else %>
-		Message :<br>
-		<%= @message_to_answer.content %>  //  
-		<%= @message_to_answer.author_id %><br>
-		<%= link_to 'Répondre', message_path(id: @message_to_answer.id,unlocking_key: @conversation_to_answer.unlocking_key) %>
-	<% end %>
-</div>
+<div id="content">
 
-<div style="background-color: red;  text-align:center; padding:10px">
-  
-  <%= form_for(@message) do |f| %>
-	  <div class="field">
-	    Posez votre question !<br>
-	    <%= f.text_field :content %>
-	  </div>
-	  <div class="actions">
-	    <%= f.submit %>
-	  </div>
-	<% end %>
+	<div id="message_notification">
+		<% if @message_to_answer.blank? %>
+			Pas de message
+		<% else %>
+			Message :<br>
+			<%= @message_to_answer.content %>  //  
+			<%= @message_to_answer.author_id %><br>
+			<%= link_to 'Répondre', message_path(id: @message_to_answer.id,unlocking_key: @conversation_to_answer.unlocking_key) %>
+		<% end %>
+		<br>
+		
+	</div>
+
+	<div>
+	  
+	  <%= form_for(@message) do |f| %>
+		  <div class="field">
+		  	<% text_area(:message, :content, cols: 40, rows: 4, id: 'sending_message_input', placeholder: "Enter here these little questions that use to have no answer", autofocus: true) %>
+		    <%= f.text_field :content,id: 'sending_message_input', placeholder: "Tape here, this little question in your head that never found answer", autofocus: true %>
+		  </div>
+		  <div class="actions">
+		    <%= f.submit "", id: 'sending_message_button'%>
+		  </div>
+		<% end %>
+
+	</div>
 
 </div>

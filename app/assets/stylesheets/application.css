@@ -13,3 +13,125 @@
  *= require_tree .
  *= require_self
  */
+
+@font-face {
+  font-family: 'Archer';    
+  src: url('/assets/fonts/Archer-Hairline-Pro.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Archer';    
+  src: url('/assets/fonts/Archer-Medium-Pro.otf');
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+html {
+	text-decoration: none !important;
+	/*font-family: "Archer";*/
+	letter-spacing: 1px; font-size: 1.2em;
+	overflow: hidden;
+  margin:0;padding: 0;
+}
+body {
+	background-color:black; color:white;text-align: center;margin:0;padding: 0;
+}
+header {
+	position:absolute;
+	left:50px; top:20px;
+	-moz-transform:rotate(90deg);
+	-webkit-transform:rotate(90deg);
+	-o-transform:rotate(90deg);
+	-webkit-transform-origin: 0% 0%;
+}
+a{color: white;}
+
+/*For button and form */
+form {display: inline-block;}
+input, button, submit
+{
+	cursor: pointer;
+	background: none;
+	color: white;	
+	padding: 3px;
+  border:none;
+  font-size: 1em;
+}
+
+input{border: solid 1px white; cursor: auto;}
+
+.pop-up {
+	-webkit-box-shadow: 0 0 60px -20px #ffffff;
+	box-shadow: 0 0 80px -20px #ffffff;
+	flex:1;
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 50px;
+}
+
+.pop-up input{width: 450px;}
+.pop-up #check_box {width: 10px; float:left;}
+.pop-up #remember_me {padding: 5px; text-align: left;float: left; display: inline-block;padding: 10px 0;}
+.pop-up #forgotten_password {padding: 5px; text-align: right;float: right;padding: 10px 0;}
+
+.validation_button {
+	margin-top: 20px;
+	height: 50px;
+	background:url(validation_button.jpg);
+  border: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.alert {
+	background-color: black;
+	position: absolute;
+	bottom: -580px;
+	left: -4px;
+	width: 200px;
+	height: 200px;
+	z-index: 20;
+	display: inline-block;
+	border-top-right-radius: 500px;
+	border: solid 3px white;
+	text-align: left;
+	padding-top: 120px;
+	padding-left: 35px;
+	padding-right: 20px;
+}
+
+#logo{margin: auto;}
+#my_conversations_img {height: 50px;margin-bottom: -20px}
+
+/*HOME PAGE*/
+#new_message{
+	width: 100%;
+}
+#sending_message_input {
+	width: 80%;
+	font-size: 1.2em;
+	text-align: center;
+	background-color:black;
+	color: white;
+}
+#sending_message_button {
+	background:url(sending_message.jpg);
+	border: none;
+	margin-top: 20px;
+	height: 50px;
+	width: 150px;
+	display: inline-block;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+#message_notification{
+	
+}
