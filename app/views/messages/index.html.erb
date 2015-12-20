@@ -1,67 +1,76 @@
+<div class="content">
+	<% # if there is a query, then the page present results %>
+	<% if @query.present? %>
 
-<% # if there is a query, then the page present results %>
-<% if @query.present? %>
-
-	<span style="color:purple">
-	<% if @query.content_cont.size > 2 %>	
-		
-		<% if @conversation_full.count < 1 %>
-			Aucune conversation publique de contient <strong>"<%= @query.content_cont %>" </strong>
-		<% else %>
-			Liste des conversation publique contenant <strong>" <%= @query.content_cont %> "</strong>
-			<%= @conversation_full.count %>
-			<br><br>
-		<% end %>
-
-	<% else %>
-		La requette demandée un un peu courte :/
-	<% end %>
-	</span>
-
-
-
-<% else %>
-	
-	Toutes les conversations du user <strong><%= current_user.email %></strong> à l'id 
-	<strong><%= current_user.id%></strong><br>
-
-<% end %>
-
-<% @conversation_full.each do |conversation| %>
-
-	<span 
-
-		<% if conversation.published? %>
-			style="color:green;"
-		<% else %>
-			<% if conversation.finished %>
-				style="color:red;"
+	<span style="text-align:center">
+		<% if @query.content_cont.size > 2 %>	
+			
+			
+			<% if @conversation_full.count < 1 %>
+				There is no public conversation containing <strong>"<%= @query.content_cont %>" </strong>
+				<!-- Aucune conversation publique de contient  -->
+			<% else %>
+				List of every public conversation containing<strong>" <%= @query.content_cont %> "</strong>
+				<!-- Liste des conversation publique contenant  -->
+				<% @conversation_full.count %>
 			<% end %>
+
+
+
+		<% else %>
+			The query is a bit short :/
+			<!-- La requette demandée un un peu courte :/ -->
 		<% end %>
-		>
-		<%= link_to 'Conversation '+conversation.id.to_s, message_path(id: conversation.lastMessage.id) %>
-
-		<% if current_user.unreadMessageFrom(conversation.id).present? %>
-
-			<!-- Message.where(conversation_id: conversation.id).where(read: false).where.not(author_id: current_user.id).present? %> -->
-			<span style="color:red">
-				<--<%= current_user.unreadMessageFrom(conversation.id).count %> Unread Message here
-			</span>
-
-		<% end %>
-
-		<li><strong> -> Question :</strong> <%= conversation.firstMessage.content%></li>
-		<li><strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%></li>
-
-		
-
-		
-		
-
-		<br>
 	</span>
 
-<% end %>
 
+
+
+	<% end %>
+
+
+
+	<% @conversation_full.each do |conversation| %>
+		
+	<hr style="margin:30px auto 10px auto;">
+		
+
+		<span 
+
+			<% if conversation.published? %>
+				style="color:green;"
+			<% else %>
+				<% if conversation.finished %>
+					style="color:red;"
+				<% end %>
+			<% end %>
+			>
+
+			
+
+			<% if current_user.unreadMessageFrom(conversation.id).present? %>
+			
+				<%= link_to image_tag('sending_message_active.jpg', id: 'conversation_link_index')+conversation.firstMessage.content, message_path(id: conversation.lastMessage.id) %>
+
+				<!-- Message.where(conversation_id: conversation.id).where(read: false).where.not(author_id: current_user.id).present? %> -->
+				<!-- <span style="color:red">
+					<--<%= current_user.unreadMessageFrom(conversation.id).count %> Unread Message here
+				</span> -->
+
+			<% else %>
+			<%= link_to image_tag('sending_message.jpg', id: 'conversation_link_index')+ conversation.firstMessage.content, message_path(id: conversation.lastMessage.id) %>
+			<% end %>
+
+			
+			<!-- <li><strong>-> Dernier message :</strong> <%= conversation.lastMessage.content%></li> -->
+
+		</span>
+
+
+	<% end %>
+	<hr>
+	<%= link_to "", :back , class: "back_link" %>
+
+</div>
 
 

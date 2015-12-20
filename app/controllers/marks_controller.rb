@@ -8,10 +8,10 @@ class MarksController < ApplicationController
 		@new_mark = Mark.new(mark_params)
 		@target_message_id = Conversation.find(@new_mark.linked_conversation_id).firstMessage.id
 		if @new_mark.save
-      flash[:notice] = "Votre note à bien été enregistrée !"
+      flash[:notice] = "Your mark has been saved"
       redirect_to message_path id: @target_message_id
     else
-      flash[:alert] = "Votre note n'a pas pu être enregistrer pour des raisons qui nous échappent"
+      flash[:alert] = "Your mark hasn't been saved :/"
       redirect_to message_path id: @target_message_id
     end
 

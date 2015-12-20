@@ -1,34 +1,34 @@
 <span
 <% if @conversation.published? %>
-	style="color:green"
+	style="color:#00ff00"
 <% end %>
 >
-	Conversation 
+	
 	<% if @conversation.published? %>
-	PUBLIQUE
+	<span style="font-size:0.8em">This Conversation is now public :</span>	<br>
 	<% end %>
-	: <%= @message.conversation_id %>.. de <%= @conversation.transmitter_id %>
+	 <!--<%= @message.conversation_id %>.. de <%= @conversation.transmitter_id %>-->
 	 <% if @conversation.published_by_transmitter %>
-	 	(désir rendre publique) 
+	 	<!-- (désir rendre publique)  -->
 	 <% end %>
-	 vers <%= @conversation.recepteur_id %>
+	 <!-- vers <%= @conversation.recepteur_id %> -->
  <% if @conversation.published_by_recepteur %>
- 	(désir rendre publique) 
+ 	<!-- (désir rendre publique)  -->
  <% end %>
 </span>
  <br>
 
 
 <% @all_messages.each do |message| %>
-	<li><td><%= message.content %> // author_id : <%= message.author_id %> //message_id : <%= message.id %>
+	<%= message.content %>
 	<% if message.read %>
-		 <strong style="color:green">
+		 <!-- <strong style="color:green">
 		 	READ
-		 </strong>
+		 </strong> -->
 	<%else%>
-			UNREAD
+			<!-- UNREAD -->
 	<%end%>
-	</td></li>
+	<hr>
 <% end %>
 
 
@@ -37,38 +37,43 @@
 	<% if @conversation.finished %>
 
 		<% if !@conversation.published? %>
-			<span style="color:red;">Conversation fermée </span>
+			<span style="font-size:0.8em">This Conversation is now finished,<br>
 
-			<% if current_user.hasPublished?(@conversation) %>
-				Vous avez fait une demande de publication
-			<% else %>
-			
-				<%= link_to "Rendre publique", edit_message_path(conversation_to_publish_id: @conversation.id)%>
-			<% end %>
+				<% if current_user.hasPublished?(@conversation) %>
+					You proposed to make it public !<br>Let's wait your interlocutor to publish too !
+				<% else %>
+				
+					You could <br><span class="make_it_public">
+						<%= link_to "Make it public", edit_message_path(conversation_to_publish_id: @conversation.id)%>
+					</span>
+				<% end %>
+			</span>
 		<% end %>
 
+		<% if @conversation.transmitter_id == current_user.id || @conversation.recepteur_id == current_user.id %>
 
-		<% if @conversation.alreadyNotedBy(current_user.id).present? %>
+			<% if @conversation.alreadyNotedBy(current_user.id).present? %>
 
-			<br><br>Vous avez attribué 
-			<%= @conversation.alreadyNotedBy(current_user.id).last.mark %> 
-			à la pertinence de ces réponses
+				<hr>You gave  
+				<%= @conversation.alreadyNotedBy(current_user.id).last.mark %>/5 
+				for the pertinence of answers<br><br><span style="font-size:0.8em">Thanks to contribute !</span>
 
-		<% else %>
+			<% else %>
 
-			<br><br>	
-			Noter la pertinence des réponses apportés :<br>
-				
-			<%= form_for(@new_mark) do |f| %>
-				<% (0..5).each do |i| %>
-					<%= f.radio_button(:mark, i) %>
-					<%= label_tag(:mark_label, i) %><br>
+				<hr>
+				You are also invited to mark <span style="text-decoration:underline">the pertinence</span> of anwsers <br><br>
+					
+				<%= form_for(@new_mark) do |f| %>
+					<% (0..5).each do |i| %>
+						<%= f.radio_button(:mark, i) %>
+						<%= label_tag(:mark_label, i) %>
+					<% end %>
+					<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
+					<%= f.hidden_field :linked_conversation_id, :value => @conversation.id %>
+					<%= f.hidden_field :user_liking_id, :value => current_user.id %>
+					<%= f.submit "Mark" %>
+
 				<% end %>
-				<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
-				<%= f.hidden_field :linked_conversation_id, :value => @conversation.id %>
-				<%= f.hidden_field :user_liking_id, :value => current_user.id %>
-				<%= f.submit "Noter" %>
-
 			<% end %>
 
 		<% end %>
@@ -83,14 +88,14 @@
 
 			<%= form_for(@answer) do |f| %>
 			  <div class="field">
-			    <%= f.text_field :content %>
+			    <%= f.text_field :content, placeholder: "  anwer..." %>
 			  </div>	
 
 				<%= f.hidden_field :conversation_id, :value => @message.conversation_id %>
 
 			  
 			  <div class="actions">
-			    <%= f.submit %>
+			    <%= f.submit "", id:'answering_button_conversation' %>
 			  </div>
 			<% end %>
 		<% end %>
@@ -99,9 +104,8 @@
 	<br><br>
 	<% if @all_messages.count > 1 %>
 		<% if current_user.id == @conversation.transmitter_id || current_user.id == @conversation.recepteur_id %>
-			<%= link_to "Clore l'échange", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
+			<%= link_to "Close this conversation", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
 		<% end %>
 	<% end %>
 <% end %>	
-
-
+<hr><!-- <%= link_to "", :back , class: "back_link" %> -->

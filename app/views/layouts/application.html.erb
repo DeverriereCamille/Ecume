@@ -12,19 +12,20 @@
 
 <body onload="
 	setTimeout(function(){
-		$('.alert').animate({'bottom': '+=500px'},900, 'easeInOutExpo');
+		$('.alert').animate({'left': '+=300px'},900, 'easeInOutExpo');
 		setTimeout(function(){
-			$('.alert').animate({'bottom': '-=500px'},900, 'easeInOutExpo');
-		},4000);
+			$('.alert').animate({'left': '-=300px'},900, 'easeInOutExpo');
+			$('.alert').fadeOut(0);
+		},6000);
 	},300);">
 
 
 <% if notice %>
-  <div class="alert alert-success" style="color:green"><%= notice %></div>
+  <div class="alert alert-success" style="color:#00ff00"><%= notice %></div>
 <% end %>
 
 <% if alert %>
-  <div class="alert alert-danger"  style="color:red"><%= alert %></div>
+  <div class="alert alert-danger"  style="color:#ff0000"><%= alert %></div>
 <% end %>
 
 
@@ -33,10 +34,17 @@
 <header>
 
   <% if user_signed_in? %>
+
   <!-- I know indentation is bad here but there is a bug if it's done well :/ -->
-  	<a href="/messages">
-  	<% if current_user.unreadMessage?.present? %><%= image_tag("my_conversations_new.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><!-- <%= current_user.unreadMessage?.count %> Unread Messages--><%else%>
-			<%= image_tag("my_conversations.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><%end%></a>
+  	<a href="/"><%= image_tag("home.jpg", :alt => "Home", :id => 'my_conversations_img') %></a>
+
+  	<%if Message.where(author_id: current_user.id).present? %>
+	  	<a href="/messages">
+	  	<% if current_user.unreadMessage?.present? %><%= image_tag("my_conversations_new.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><!-- <%= current_user.unreadMessage?.count %> Unread Messages--><%else%>
+				<%= image_tag("my_conversations.jpg", :alt => "My Conversations", :id => 'my_conversations_img') %><%end%></a>
+		<%end %>
+
+
 	<%end%>
 	
 	<% if user_signed_in? %>
@@ -44,7 +52,7 @@
 	  <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
 
 
-	<%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+	<%= button_to "Logout", destroy_user_session_path, method: :delete, id: "logout_button", class: 'navbar-link'  %>
 	<% else %>
 
 	  <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
@@ -62,14 +70,7 @@
 	  </a>
 	  
 	  
-	  <!-- <a href="/general">Résumé général (pour dev)</a> -->
-
-	  <% @message_reasult = Message.ransack().result() %>
-
-	  <% search_form_for Message.ransack() do |f| %>
-		  <% f.text_field :content_cont %>
-		  <% f.submit "Rechercher" %>
-		<% end %>
+	  <a href="/general" id="link_to_general_resume"><!--Résumé général (pour dev)--></a>
 
 </nav>
 

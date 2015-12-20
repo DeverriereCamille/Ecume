@@ -33,7 +33,7 @@ html {
 	text-decoration: none !important;
 	/*font-family: "Archer";*/
 	letter-spacing: 1px; font-size: 1.2em;
-	overflow: hidden;
+	/*overflow: hidden;*/
   margin:0;padding: 0;
 }
 body {
@@ -60,6 +60,8 @@ input, button, submit
   border:none;
   font-size: 1em;
 }
+
+hr {margin:40px auto;width: 40px;}
 
 input{border: solid 1px white; cursor: auto;}
 
@@ -92,16 +94,19 @@ input{border: solid 1px white; cursor: auto;}
 .alert {
 	background-color: black;
 	position: absolute;
-	bottom: -580px;
-	left: -4px;
+	bottom: -4px;
+	left: -300px;
 	width: 200px;
-	height: 200px;
+	/*height: 200px;*/
 	z-index: 20;
 	display: inline-block;
-	border-top-right-radius: 500px;
+	/*border-top-right-radius: 500px;*/
+	border-right-radius: 500px;
 	border: solid 3px white;
 	text-align: left;
-	padding-top: 120px;
+	/*padding-top: 120px;*/
+	padding-top: 20px;
+	padding-bottom: 20px;
 	padding-left: 35px;
 	padding-right: 20px;
 }
@@ -119,6 +124,7 @@ input{border: solid 1px white; cursor: auto;}
 	text-align: center;
 	background-color:black;
 	color: white;
+	padding: 30px;
 }
 #sending_message_button {
 	background:url(sending_message.jpg);
@@ -132,6 +138,112 @@ input{border: solid 1px white; cursor: auto;}
   background-position: center;
   cursor: pointer;
 }
+#researching_button{
+	background:url(sending_message.jpg);
+	border: none;
+	height: 50px;
+	width: 150px;
+	display: inline-block;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+
 #message_notification{
-	
+	border:solid 1px white;
+	width: 50%;
+	margin: 40px auto;
+	padding: 20px;
+}
+
+#message_notification_new_message{
+	border: solid 1px #00ff00;
+	width: 50%;
+	margin: 40px auto;
+	padding: 20px;
+}
+
+#new_message_recieve{
+	font-size: 1.2em;
+}
+
+#answer_button{
+	background:url(answer_button.jpg);
+	margin-top: 20px;
+	height: 50px;
+	width: 150px;
+	display: inline-block;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+	border: none;
+}
+
+#reasearch_field {
+	padding: 10px;
+	width: 100%;
+	text-align: center;
+}
+
+#answering_button_conversation{
+	border: none;
+	background:url(answer_button.jpg);
+	margin-top: 20px;
+	height: 50px;
+	width: 150px;
+	display: inline-block;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#link_to_general_resume{
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 20px;
+	width:20px;
+	background-color: #ff0000;
+	opacity: 0;
+}
+#link_to_general_resume:hover{
+	opacity: 1;
+}
+
+.content{
+	height: 100%;
+	width: 50%;
+  text-align: left;
+  margin: auto;
+}
+
+#logout_button{
+	cursor: pointer; padding: 3px 7px;
+}
+
+#conversation_link_index{
+	display: inline-block;
+	margin-bottom: -25px;
+	text-decoration: none;
+	margin-right: 10px;
+}
+
+#text_link_conversation{
+	padding-bottom: 20px;
+}
+
+.make_it_public a{
+	color:#00ff00;
+}
+
+.back_link{
+	background:url(back.jpg);
+	height: 50px;
+	width: 150px;
+	display: inline-block;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

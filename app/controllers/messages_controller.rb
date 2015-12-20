@@ -47,7 +47,7 @@ class MessagesController < ApplicationController
       if message_params[:conversation_id].present?
         @message = Message.new(message_params.merge(author_id: current_user.id, read: false))
 
-        flash[:notice] = "Votre réponse à bien été envoyée"
+        flash[:notice] = "Your answer is now sent !"
       
       else # If conversation_id isn't known, we have to create the converation
     
@@ -59,7 +59,7 @@ class MessagesController < ApplicationController
         @current_conversation_id = @current_conversation.id
         
         @message = Message.new(message_params.merge(author_id: current_user.id, read: false, conversation_id: @current_conversation_id))
-        flash[:notice] = "Message lancé... soyez patient, une réponse peut mettre du temps à revenir !"
+        flash[:notice] = "Your message is now far, be patient, it may take time to come back !"
         
       end
    
@@ -67,7 +67,7 @@ class MessagesController < ApplicationController
       if @message.save
         redirect_to root_path
       else
-        flash[:notice] = "Votre message n'a pas pu être envoyé pour une raison qui nous échappe.."
+        flash[:alert] = "Your message is not sent"
         redirect_to root_path
       end
     end
@@ -89,12 +89,12 @@ class MessagesController < ApplicationController
     # ( OR if the transmitter try to access by himself to his own message)
     if ((!@conversation.published?) && (current_user.id != @conversation.transmitter_id) && ((@conversation.recepteur_id.present?) && (current_user.id != @conversation.recepteur_id)) || (@conversation.transmitter_id == current_user.id && @conversation.recepteur_id.nil? ))
       # Just tell to the current user to go fuck around
-      flash[:alert] = "Vous n'êtes pas autorisé à accèder à la page demandée"
+      flash[:alert] = "You arn't authorised to access to this page"
       if !@conversation.published?
-        flash[:alert] += " - La conversation est privée"
+        flash[:alert] += " - This is a private conversation"
       end
       if current_user.id != @conversation.transmitter_id && current_user.id != @conversation.recepteur_id
-        flash[:alert] += " et vous ne faites pas partie des interlocuteurs"
+        flash[:alert] += " and you are not part of interlocutors"
       end
       redirect_to root_path
       
@@ -113,7 +113,7 @@ class MessagesController < ApplicationController
         end
 
         if @conversation.finished
-          # Variable nécessaire à la création d'un formulaire de notation
+          # Nessessary variable for form creation 
           @new_mark = Mark.new
         end
 
@@ -123,7 +123,7 @@ class MessagesController < ApplicationController
 
         # - - - - - - - - - - - - - -  - <
         if params[:unlocking_key] != @conversation.unlocking_key
-          flash[:notice] = "Bien essayé mais nan, c'est les messages qui viennent à nous, pas nous qui vennont aux messages"
+          flash[:notice] = "Well tried, but no, it's messages that are coming to you, and not you coming to messages !"
           redirect_to root_path
         end
 
@@ -167,7 +167,7 @@ class MessagesController < ApplicationController
 
       #check if the size of the query is enough long :
       if @query.content_cont.size <= 2
-        flash[:alert] = "Faîtes une recherche de plus de 2 caractères pour un minimum de pertinence"
+        flash[:alert] = "Make a query with more than 2 caracters for more pertinence !"
         #Fix some variable to nil or empty stuff for nothing to appear
         @query = nil
         @conversation_full = Array.new
