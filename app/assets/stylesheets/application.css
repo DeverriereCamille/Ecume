@@ -31,7 +31,7 @@
 
 html {
 	text-decoration: none !important;
-	/*font-family: "Archer";*/
+	font-family: "Archer";
 	letter-spacing: 1px; font-size: 1.2em;
 	/*overflow: hidden;*/
   margin:0;padding: 0;
@@ -215,7 +215,7 @@ input{border: solid 1px white; cursor: auto;}
 .content{
 	height: 100%;
 	width: 50%;
-  text-align: left;
+  text-align: center;
   margin: auto;
 }
 

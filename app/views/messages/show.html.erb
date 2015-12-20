@@ -1,111 +1,114 @@
-<span
-<% if @conversation.published? %>
-	style="color:#00ff00"
-<% end %>
->
-	
+<div class="content">
+
+	<span
 	<% if @conversation.published? %>
-	<span style="font-size:0.8em">This Conversation is now public :</span>	<br>
+		style="color:#00ff00"
 	<% end %>
-	 <!--<%= @message.conversation_id %>.. de <%= @conversation.transmitter_id %>-->
-	 <% if @conversation.published_by_transmitter %>
+	>
+		
+		<% if @conversation.published? %>
+		<span style="font-size:0.8em">This Conversation is now public :</span>	<br>
+		<% end %>
+		 <!--<%= @message.conversation_id %>.. de <%= @conversation.transmitter_id %>-->
+		 <% if @conversation.published_by_transmitter %>
+		 	<!-- (désir rendre publique)  -->
+		 <% end %>
+		 <!-- vers <%= @conversation.recepteur_id %> -->
+	 <% if @conversation.published_by_recepteur %>
 	 	<!-- (désir rendre publique)  -->
 	 <% end %>
-	 <!-- vers <%= @conversation.recepteur_id %> -->
- <% if @conversation.published_by_recepteur %>
- 	<!-- (désir rendre publique)  -->
- <% end %>
-</span>
- <br>
+	</span>
+	 <br>
 
 
-<% @all_messages.each do |message| %>
-	<%= message.content %>
-	<% if message.read %>
-		 <!-- <strong style="color:green">
-		 	READ
-		 </strong> -->
-	<%else%>
-			<!-- UNREAD -->
-	<%end%>
-	<hr>
-<% end %>
-
-
-
-
-	<% if @conversation.finished %>
-
-		<% if !@conversation.published? %>
-			<span style="font-size:0.8em">This Conversation is now finished,<br>
-
-				<% if current_user.hasPublished?(@conversation) %>
-					You proposed to make it public !<br>Let's wait your interlocutor to publish too !
-				<% else %>
-				
-					You could <br><span class="make_it_public">
-						<%= link_to "Make it public", edit_message_path(conversation_to_publish_id: @conversation.id)%>
-					</span>
-				<% end %>
-			</span>
-		<% end %>
-
-		<% if @conversation.transmitter_id == current_user.id || @conversation.recepteur_id == current_user.id %>
-
-			<% if @conversation.alreadyNotedBy(current_user.id).present? %>
-
-				<hr>You gave  
-				<%= @conversation.alreadyNotedBy(current_user.id).last.mark %>/5 
-				for the pertinence of answers<br><br><span style="font-size:0.8em">Thanks to contribute !</span>
-
-			<% else %>
-
-				<hr>
-				You are also invited to mark <span style="text-decoration:underline">the pertinence</span> of anwsers <br><br>
-					
-				<%= form_for(@new_mark) do |f| %>
-					<% (0..5).each do |i| %>
-						<%= f.radio_button(:mark, i) %>
-						<%= label_tag(:mark_label, i) %>
-					<% end %>
-					<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
-					<%= f.hidden_field :linked_conversation_id, :value => @conversation.id %>
-					<%= f.hidden_field :user_liking_id, :value => current_user.id %>
-					<%= f.submit "Mark" %>
-
-				<% end %>
-			<% end %>
-
-		<% end %>
-
-
-	<% else %>
-
-
-		<% if @all_messages.count <= 1 && current_user.id == @conversation.transmitter_id %>
-
+	<% @all_messages.each do |message| %>
+		<%= message.content %>
+		<% if message.read %>
+			 <!-- <strong style="color:green">
+			 	READ
+			 </strong> -->
 		<%else%>
+				<!-- UNREAD -->
+		<%end%>
+		<hr>
+	<% end %>
 
-			<%= form_for(@answer) do |f| %>
-			  <div class="field">
-			    <%= f.text_field :content, placeholder: "  anwer..." %>
-			  </div>	
 
-				<%= f.hidden_field :conversation_id, :value => @message.conversation_id %>
 
-			  
-			  <div class="actions">
-			    <%= f.submit "", id:'answering_button_conversation' %>
-			  </div>
+
+		<% if @conversation.finished %>
+
+			<% if !@conversation.published? %>
+				<span style="font-size:0.8em">This Conversation is now finished,<br>
+
+					<% if current_user.hasPublished?(@conversation) %>
+						You proposed to make it public !<br>Let's wait your interlocutor to publish too !
+					<% else %>
+					
+						You could <br><span class="make_it_public">
+							<%= link_to "Make it public", edit_message_path(conversation_to_publish_id: @conversation.id)%>
+						</span>
+					<% end %>
+				</span>
+			<% end %>
+
+			<% if @conversation.transmitter_id == current_user.id || @conversation.recepteur_id == current_user.id %>
+
+				<% if @conversation.alreadyNotedBy(current_user.id).present? %>
+
+					<hr>You gave  
+					<%= @conversation.alreadyNotedBy(current_user.id).last.mark %>/5 
+					for the pertinence of answers<br><br><span style="font-size:0.8em">Thanks to contribute !</span>
+
+				<% else %>
+
+					<hr>
+					You are also invited to mark <span style="text-decoration:underline">the pertinence</span> of anwsers <br><br>
+						
+					<%= form_for(@new_mark) do |f| %>
+						<% (0..5).each do |i| %>
+							<%= f.radio_button(:mark, i) %>
+							<%= label_tag(:mark_label, i) %>
+						<% end %>
+						<%= f.hidden_field :user_liked_id, :value => @interlocutor.id %>
+						<%= f.hidden_field :linked_conversation_id, :value => @conversation.id %>
+						<%= f.hidden_field :user_liking_id, :value => current_user.id %>
+						<%= f.submit "Mark" %>
+
+					<% end %>
+				<% end %>
+
+			<% end %>
+
+
+		<% else %>
+
+
+			<% if @all_messages.count <= 1 && current_user.id == @conversation.transmitter_id %>
+
+			<%else%>
+
+				<%= form_for(@answer) do |f| %>
+				  <div class="field">
+				    <%= f.text_field :content, placeholder: "  anwer..." %>
+				  </div>	
+
+					<%= f.hidden_field :conversation_id, :value => @message.conversation_id %>
+
+				  
+				  <div class="actions">
+				    <%= f.submit "", id:'answering_button_conversation' %>
+				  </div>
+				<% end %>
+			<% end %>
+
+
+		<br><br>
+		<% if @all_messages.count > 1 %>
+			<% if current_user.id == @conversation.transmitter_id || current_user.id == @conversation.recepteur_id %>
+				<%= link_to "Close this conversation", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
 			<% end %>
 		<% end %>
-
-
-	<br><br>
-	<% if @all_messages.count > 1 %>
-		<% if current_user.id == @conversation.transmitter_id || current_user.id == @conversation.recepteur_id %>
-			<%= link_to "Close this conversation", edit_message_path(conversation_to_close_id: @message.conversation_id)%>
-		<% end %>
-	<% end %>
-<% end %>	
-<hr><!-- <%= link_to "", :back , class: "back_link" %> -->
+	<% end %>	
+	<hr><!-- <%= link_to "", :back , class: "back_link" %> -->
+</div>
